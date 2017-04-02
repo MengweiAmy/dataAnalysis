@@ -1,0 +1,12 @@
+
+%Get Fixation index data
+fidInd = fopen('ClickInfo-Mouse Control.dat','r');
+C1 = textscan(fidInd,'%s%s%s%s%s%s', 'CollectOutput',1);
+fclose(fidInd);
+fixaIndex = C1{1,1};
+% Get column names from fixation index data
+attriNaFixInd = fixaIndex(7,:);
+
+%% Handle fixation data 
+cellfun(@str2double,fixaIndex(7:end,3:end));
+%plot(fixaIndDoul(:,2),fixaIndDoul(:,3),'.');
