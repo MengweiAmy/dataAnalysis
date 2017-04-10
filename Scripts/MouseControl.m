@@ -25,17 +25,32 @@ realAnayData = zeroLine(nonFixId,:);
 %1. Plot the pupil size change during the whole input process
 mfig('Fixation & Pupil Size'); clf;
 plot(realAnayData(:,5));hold on;
-plot(realAnayData(:,3),realAnayData(:,4),'*');
+%plot(realAnayData(:,3),realAnayData(:,4),'*');
 title('Pupil size changed based on Index');
 ylabel('Pupile Size');
 
 %2. Plot the click position
 mfig('Fixation & Click Info'); clf;
-plot(realAnayData(:,3),realAnayData(:,4),'*');hold on;
+plot(realAnayData(:,3),realAnayData(:,4),'*');
 xlabel('X position');
 ylabel('Y position');
 
-ClickInfo = ClickAna();
-plot(ClickInfo(:,3),ClickInfo(:,4),'o');
+%3. Boxplotting of the pupil size based on each fixation
+
+fixIndexLabel = realAnayData(:,12);
+fixIndex = unique(fixIndexLabel);
+[y_,y] = ismember(fixIndexLabel, fixIndex); y = y'-1;
+
+mfig('Boxplot of normalized attributes');clf;
+
+for c=0:5
+  boxplot(realAnayData(y==c,5));hold on;  
+end
+
+%boxplot(realAnayData(:,5),attriFixaName(:,5));
+title('Boxplot of the attributes (normalized)');
+
+%ClickInfo = ClickAna();
+%plot(ClickInfo(:,3),ClickInfo(:,4),'o');
 
 
