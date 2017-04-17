@@ -41,6 +41,7 @@ else % Windows system
     addpath([path '\Tools\Apriori'])
     addpath([path '\Tools\02450Tools'])
     addpath([path '\Scripts'])
+    addpath([path '\Scripts\Performance'])
 end
 clear path;
 

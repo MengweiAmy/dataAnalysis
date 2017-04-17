@@ -1,16 +1,18 @@
-function pupileRadium = ComparePupilRadium(filepath,blockSize)
+function r = GetGazeControlPupilRadium(filepath,blockSize)
 pupileRadium=[];
-startIndex = [];
 
 %Get current folder name
 parentpath = pwd(); 
 
 %Get fixation data
-fileNFix = strcat(filepath,'/Gaze/fixation');
+fileNFix = strcat(filepath,'/fixation');
 path = fullfile(parentpath,strcat(fileNFix,'.dat'));
 fixationRaw = ReadData(path,12);
 fixaDoul = cellfun(@str2double,fixationRaw(3:end,:));%convert cells to double
 fixaRealData = ClearFixationInvalidData(fixaDoul);
+A = zeros(length(fixaRealData),1)
+A(:)= -1
+fixaRealData(:,13) = A;
     
 for s = 1: blockSize
 %%Compare the same sentence time assuming 
@@ -21,25 +23,26 @@ for s = 1: blockSize
     gaze = ReadData(path,6);
 
     %Get the end time of current gaze period
+    
+    timeGazStart = cellfun(@str2double,gaze(6,4));
     timeGazEnd = cellfun(@str2double,gaze(length(gaze),4));
     
     if s==1
-        startIndex = 3;
-    else
-        %Get curren start index from fixation dataset
-        startIndex = startIndex(length(startIndex));
+        timeGazStart = 0;
     end
         
     %%%%%%%%%%%%%%%%%%Get report time for now
-    idx = fixaRealData(:,10) < timeGazEnd;
-    fixaForCurrGaze = fixaRealData(idx,:);% get fixation when look at text area
+    idxEnd = fixaRealData(:,10) <= timeGazEnd;
+    fixaForCurrGaze = fixaRealData(idxEnd,:);% get fixation when look at text area
     
-    idxEnd = fixaForCurrGaze(length(fixaForCurrGaze),1);
-    %Get the next startIndex 
-    startIndex = cat(1,startIndex,idxEnd)
-    
-    plot(fixaForCurrGaze(:,9),fixaForCurrGaze(:,5));hold on;
-    title('Pupil Radium Changes');
-    xlabel('Seconds')
-    ylabel('Pupil Radium')
+    idxStar = fixaForCurrGaze(:,10) >= timeGazStart;
+    fixaPerid = fixaForCurrGaze(idxStar,:);
+    fixaPerid(:,13) = s;%Add group number for each gaze group
+    if s == 1 
+        pupileRadium = fixaPerid;
+    else 
+        pupileRadium = cat(1,pupileRadium,fixaPerid)
+    end
+    %boxplot(fixaForCurrGaze(:,5))
 end
+r = pupileRadium;
