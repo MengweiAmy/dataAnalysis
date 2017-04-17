@@ -3,7 +3,7 @@ timeMatrix=[];
 for s = 1: blockSize
     %%Compare the same sentence time assuming 
     parentpath = pwd(); 
-    fileNameGaze = strcat(filepath,'/Gaze/ClickInfo-Gaze Control_',num2str(s));
+    fileNameGaze = strcat(filepath,'/Gaze/ClickInfo_',num2str(s));
     path = fullfile(parentpath,strcat(fileNameGaze,'.dat'));
     gaze = ReadData(path,6);
     %Number of key stroke when using gaze control
@@ -22,7 +22,7 @@ for s = 1: blockSize
 
     glettersize = length(gazeKeyClick);
 
-    fileName = strcat(filepath,'/Mouse/ClickInfo-Mouse Control_',num2str(s));
+    fileName = strcat(filepath,'/Mouse/ClickInfo_',num2str(s));
     mousepath = fullfile(parentpath,strcat(fileName,'.dat'));
     mouse = ReadData(mousepath,6);
     

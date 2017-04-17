@@ -1,0 +1,45 @@
+function pupileRadium = ComparePupilRadium(filepath,blockSize)
+pupileRadium=[];
+startIndex = [];
+
+%Get current folder name
+parentpath = pwd(); 
+
+%Get fixation data
+fileNFix = strcat(filepath,'/Gaze/fixation');
+path = fullfile(parentpath,strcat(fileNFix,'.dat'));
+fixationRaw = ReadData(path,12);
+fixaDoul = cellfun(@str2double,fixationRaw(3:end,:));%convert cells to double
+fixaRealData = ClearFixationInvalidData(fixaDoul);
+    
+for s = 1: blockSize
+%%Compare the same sentence time assuming 
+    
+    %filepath = '/data/NEW-G16-3B-Cp-75,300';
+    fileNameGaze = strcat(filepath,'/Gaze/ClickInfo-Gaze Control_',num2str(s));
+    path = fullfile(parentpath,strcat(fileNameGaze,'.dat'));
+    gaze = ReadData(path,6);
+
+    %Get the end time of current gaze period
+    timeGazEnd = cellfun(@str2double,gaze(length(gaze),4));
+    
+    if s==1
+        startIndex = 3;
+    else
+        %Get curren start index from fixation dataset
+        startIndex = startIndex(length(startIndex));
+    end
+        
+    %%%%%%%%%%%%%%%%%%Get report time for now
+    idx = fixaRealData(:,10) < timeGazEnd;
+    fixaForCurrGaze = fixaRealData(idx,:);% get fixation when look at text area
+    
+    idxEnd = fixaForCurrGaze(length(fixaForCurrGaze),1);
+    %Get the next startIndex 
+    startIndex = cat(1,startIndex,idxEnd)
+    
+    plot(fixaForCurrGaze(:,9),fixaForCurrGaze(:,5));hold on;
+    title('Pupil Radium Changes');
+    xlabel('Seconds')
+    ylabel('Pupil Radium')
+end

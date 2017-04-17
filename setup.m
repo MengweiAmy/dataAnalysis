@@ -29,6 +29,7 @@ if strcmp(path(1),'/') % linux system
     addpath([path '/Tools/Apriori'])    
     addpath([path '/Tools/02450Tools'])
     addpath([path '/Scripts'])
+    addpath([path '/Scripts/Performance'])
 else % Windows system   
     addpath([path '\Tools\TMG_6.0R7'])
     addpath([path '\Tools\MBox'])    

@@ -1,4 +1,4 @@
-function r = GetGazeControlPupilRadium(filepath,blockSize)
+function [r,z] = GetGazeControlPupilRadium(filepath,blockSize)
 pupileRadium=[];
 
 %Get current folder name
@@ -13,15 +13,16 @@ fixaRealData = ClearFixationInvalidData(fixaDoul);
 A = zeros(length(fixaRealData),1)
 A(:)= -1
 fixaRealData(:,13) = A;
+wholeClickData = [];
     
 for s = 1: blockSize
 %%Compare the same sentence time assuming 
     
     %filepath = '/data/NEW-G16-3B-Cp-75,300';
-    fileNameGaze = strcat(filepath,'/Gaze/ClickInfo-Gaze Control_',num2str(s));
+    fileNameGaze = strcat(filepath,'/ClickInfo_',num2str(s));
     path = fullfile(parentpath,strcat(fileNameGaze,'.dat'));
     gaze = ReadData(path,6);
-
+    wholeClickData = cat(1,wholeClickData,gaze(6:end,:))
     %Get the end time of current gaze period
     
     timeGazStart = cellfun(@str2double,gaze(6,4));
@@ -45,4 +46,6 @@ for s = 1: blockSize
     end
     %boxplot(fixaForCurrGaze(:,5))
 end
-r = pupileRadium;
+r = pupileRadium
+z = wholeClickData
+end
