@@ -57,22 +57,45 @@ plot(gdgrp5(:,5));
 legend(labels)
 xlabel('Data point')
 ylabel('Pupil Size')
+title('Pupil size change for different Dwell time')
 
 %% WPM and KSPS performance for different dwell time
-mfig('WPM')
-r = [];
+% NOTE: Current 100ms does not finish the entry
+mfig('WPM for Different Dwell Time')
+wpm = [];
+ksps = [];
 for i=1:length(data)
     if i == 1
-        r = cat(1,r,CalculateWPMForGroup(gdgrp1,cdgrp1));
+       [r,m] = CalculateWPMForGroup(gdgrp1,cdgrp1);
     elseif i==2
-        r = cat(1,r,CalculateWPMForGroup(gdgrp2,cdgrp2));
+        [r,m] = CalculateWPMForGroup(gdgrp2,cdgrp2);
     elseif i==3
-        r = cat(1,r,CalculateWPMForGroup(gdgrp3,cdgrp3));
+        [r,m] = CalculateWPMForGroup(gdgrp3,cdgrp3);
     elseif i==4
-        r = cat(1,r,CalculateWPMForGroup(gdgrp4,cdgrp4));
+        [r,m] = CalculateWPMForGroup(gdgrp4,cdgrp4);
     elseif i==5
-        r = cat(1,r,CalculateWPMForGroup(gdgrp5,cdgrp5));
+        [r,m] = CalculateWPMForGroup(gdgrp5,cdgrp5);
     end
+    wpm = cat(1,wpm,r);
+    ksps = cat(1,ksps,m);
 end
-bar(r)
+grpDT = [repmat({strcat(num2str(data(1)),'ms')}, 1, 1); 
+    repmat({strcat(num2str(data(2)),'ms')}, 1, 1);
+    repmat({strcat(num2str(data(3)),'ms')}, 1, 1);
+    repmat({strcat(num2str(data(4)),'ms')}, 1, 1);
+    repmat({strcat(num2str(data(5)),'ms')}, 1, 1)]
+subplot(1,2,1)
+b = bar(wpm)
+b.BarWidth = 0.3;
+set(gca,'xticklabel',grpDT)
+xlabel('Dwell Time')
+ylabel('WPM(Words Per Minute)')
 
+subplot(1,2,2)
+b = bar(ksps)
+b.BarWidth = 0.3;
+set(gca,'xticklabel',grpDT)
+xlabel('Dwell Time')
+ylabel('KSPS(Key Strokes Per Seconds)')
+
+%% Error Rate

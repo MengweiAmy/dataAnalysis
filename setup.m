@@ -30,6 +30,9 @@ if strcmp(path(1),'/') % linux system
     addpath([path '/Tools/02450Tools'])
     addpath([path '/Scripts'])
     addpath([path '/Scripts/Performance'])
+    addpath([path '/Scripts/DiffDwell'])
+    addpath([path '/Scripts/MouseGaze'])
+    addpath([path '/Scripts/Common'])
 else % Windows system   
     addpath([path '\Tools\TMG_6.0R7'])
     addpath([path '\Tools\MBox'])    
@@ -43,6 +46,9 @@ else % Windows system
     addpath([path '\Tools\02450Tools'])
     addpath([path '\Scripts'])
     addpath([path '\Scripts\Performance'])
+    addpath([path '\Scripts\DiffDwell'])
+    addpath([path '\Scripts\MouseGaze'])
+    addpath([path '\Scripts\Common'])
 end
 clear path;
 
