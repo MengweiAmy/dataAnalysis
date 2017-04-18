@@ -50,6 +50,7 @@ boxplot(wholeGazeData(:,5),grp)
 xlabel('Dwell Time(ms)')
 ylabel('Pupil Size')
 title('Boxplot of Pupil Size with differen DWell Time')
+m
 
 %% Plot for different dwell time
 mfig('Pupil curve for Different Dwell Time')
