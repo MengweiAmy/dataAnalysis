@@ -1,6 +1,6 @@
 function r = ReadData(filePath,colu)
 fid = fopen(filePath,'r');
-colusSize = '%s'
+colusSize = '%s%s%s%s%s'
 for c=2:colu
     colusSize = strcat(colusSize,'%s')
 end

@@ -22,10 +22,17 @@ for s = 1: blockSize
     fileNameGaze = strcat(filepath,'/ClickInfo_',num2str(s));
     path = fullfile(parentpath,strcat(fileNameGaze,'.dat'));
     gaze = ReadData(path,6);
-    wholeClickData = cat(1,wholeClickData,gaze(6:end,:))
+    for st = 1:length(gaze)
+          if cellfun(@str2double,gaze(st,1)) == 0
+              startIndex = st
+              break
+          end
+    end
+  
+    wholeClickData = cat(1,wholeClickData,gaze(startIndex:end,:))
     %Get the end time of current gaze period
     
-    timeGazStart = cellfun(@str2double,gaze(6,4));
+    timeGazStart = cellfun(@str2double,gaze(startIndex,4));
     timeGazEnd = cellfun(@str2double,gaze(length(gaze),4));
     
     if s==1

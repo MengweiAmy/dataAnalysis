@@ -1,36 +1,65 @@
-blocksize = 5;
+blocksize = 3;
+folderPath = '/data/NEW-G25-3B-Cp-75,200'
 
 %% WPM calculation for 3 blocks
-matrix = CompareFinishTime('/data/NEW-G20-5B-Cp-75,250',blocksize, 1);
+matrix = CompareFinishTime(folderPath,blocksize, 1, 1);
 mfig('WPM calculation'); clf;
+subplot(1,2,1)
 bar(matrix)
-title(strcat('WPM for ',blocksize,' Blocks'));
+[m,n] = size(matrix)
+for i1=1:n
+    for i2 = 1:m
+        if i1 == 1
+            xpos = i2 - 0.15
+        else
+            xpos = i2 + 0.15
+        end
+        text(xpos,matrix(i2,i1),num2str(matrix(i2,i1),'%0.2f'),...
+               'HorizontalAlignment','center',...
+               'VerticalAlignment','bottom')
+    end
+end
+title(strcat('WPM Compare between Mouse and Gaze for  ',num2str(blocksize),' Block(s)'));
 if blocksize == 5
     labels = {'Group1', 'Group2', 'Group3','Group4','Group5'};
 else
     labels = {'Group1', 'Group2', 'Group3'}
 end
-set(gca,'XTick',1:3,'XTickLabel',labels);
+set(gca,'XTick',1:blocksize,'XTickLabel',labels);
 ylabel('WPM(Words Per Minute)')
 legend('Gaze Control', 'Mouse Control');
 
 %% KSPS calculation for 3 blocks
-matrix = CompareFinishTime('/data/NEW-G20-5B-Cp-75,250',blocksize, 0);
+matrix = CompareFinishTime(folderPath,blocksize, 0, 1);
 mfig('KSPS calculation'); clf;
+subplot(1,2,2)
 bar(matrix)
-title(strcat('KSPS for ',blocksize,' Blocks'))
+[m,n] = size(matrix)
+for i1=1:n
+    for i2 = 1:m
+        if i1 == 1
+            xpos = i2 - 0.15
+        else
+            xpos = i2 + 0.15
+        end
+        text(xpos,matrix(i2,i1),num2str(matrix(i2,i1),'%0.2f'),...
+               'HorizontalAlignment','center',...
+               'VerticalAlignment','bottom')
+    end
+end
 if blocksize == 5
     labels = {'Group1', 'Group2', 'Group3','Group4','Group5'}
 else
     labels = {'Group1', 'Group2', 'Group3'}
 end
+title(strcat('KSPS Compare between Mouse and Gaze for  ',num2str(blocksize),' Blocks'));
 set(gca,'XTick',1:blocksize,'XTickLabel',labels);
 ylabel('KSPS(KeyStrokes Per Minute)')
 legend('Gaze Control', 'Mouse Control');
 
 %% Pupile radium gaze boxplot for 3 blocks
 mfig('boxplot of Pupil Size'); clf;
-[gazematrix,wholeClGaze] = GetGazeControlPupilRadium('/data/NEW-G20-5B-Cp-75,250/Gaze',blocksize);
+[gazematrix,wholeClGaze] = GetGazeControlPupilRadium(strcat(folderPath,'/Gaze/'),blocksize);
 gzgrp1 = [];
 gzgrp2 = [];
 gzgrp3 = [];
@@ -69,7 +98,7 @@ subplot(2,1,1)
 boxplot(gazematrix(:,5),grp)
 
 %% Pupil radium mouse boxplot for 3 blocks
-[mousematrix,wholeClMous] = GetGazeControlPupilRadium('/data/NEW-G20-5B-Cp-75,250/Mouse',5);
+[mousematrix,wholeClMous] = GetGazeControlPupilRadium(strcat(folderPath,'/Mouse/'),blocksize);
 mcgrp1 = [];
 mcgrp2 = [];
 mcgrp3 = [];
@@ -118,16 +147,16 @@ mfig('Plot of pupil size'); clf;
 plot(mousematrix(:,5));hold on;
 plot(gazematrix(:,5));
 
-%% find the biggest pupil size position
-% find out the time when pupil size is larger than 6.6
-idBigg = gazematrix(:,5) > 6.6;
-biggestPuMat = gazematrix(idBigg,:)
-tPeriSt = biggestPuMat(1,10)
-tPeriEnd = biggestPuMat(length(biggestPuMat),10)
-
-%get the point from Click data where gaze size is larger than 6.6
-clickMa = GetRangeDataFromMatrix(tPeriSt,tPeriEnd,wholeClGaze,4)
-
 %% Pupil size range based on the word length
+mfig('Plot of pupil size For Each Sentence'); clf;
+grp1 = gazematrix(gazematrix(:,13) == 1,:);
+plot(grp1(:,5));hold on;
+grp2 = gazematrix(gazematrix(:,13) == 2,:);
+plot(grp2(:,5));hold on;
+grp3 = gazematrix(gazematrix(:,13) == 3,:);
+plot(grp3(:,5));
 
-
+legend({'First Sentence','Second Sentence','Third Sentence'})
+xlabel('Data point')
+ylabel('Pupil Size')
+title('Pupil size change for different Dwell time')
